@@ -46,93 +46,269 @@ class _StopwatchScreenState extends State<StopwatchScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final bool isRunning = _stopwatch.isRunning;
+
     return Scaffold(
-      appBar: AppBar(title: const Text('Stopwatch')),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              padding: const EdgeInsets.all(40),
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: Theme.of(context).colorScheme.surface,
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.withOpacity(0.2),
-                    blurRadius: 20,
-                    spreadRadius: 10,
-                  ),
-                ],
-                border: Border.all(
-                  color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
-                  width: 8,
-                ),
+      backgroundColor: const Color(0xFFF0F6FF),
+      appBar: AppBar(
+        title: const Text(
+          'Stopwatch',
+          style: TextStyle(
+            fontWeight: FontWeight.w800,
+            fontSize: 18,
+            letterSpacing: 0.3,
+            color: Colors.white,
+          ),
+        ),
+        flexibleSpace: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              colors: [Color(0xFF0D47A1), Color(0xFF1E88E5)],
+              begin: Alignment.centerLeft,
+              end: Alignment.centerRight,
+            ),
+          ),
+        ),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        iconTheme: const IconThemeData(color: Colors.white),
+      ),
+      body: Column(
+        children: [
+          // Header banner
+          Container(
+            width: double.infinity,
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                colors: [Color(0xFF0D47A1), Color(0xFF1E88E5)],
+                begin: Alignment.centerLeft,
+                end: Alignment.centerRight,
               ),
-              child: Text(
-                _formatTime(),
-                style: TextStyle(
-                  fontSize: 56,
-                  fontWeight: FontWeight.w300,
-                  color: Theme.of(context).colorScheme.onSurface,
-                  fontFeatures: const [FontFeature.tabularFigures()],
-                ),
+              borderRadius: BorderRadius.only(
+                bottomLeft: Radius.circular(32),
+                bottomRight: Radius.circular(32),
               ),
             ),
-            const SizedBox(height: 60),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+            padding: const EdgeInsets.fromLTRB(24, 8, 24, 28),
+            child: Row(
               children: [
-                _buildCircularButton(
-                  icon: Icons.play_arrow_rounded,
-                  color: Colors.green,
-                  onPressed: _stopwatch.isRunning ? null : _start,
-                  tooltip: 'Start',
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withOpacity(0.15),
+                    borderRadius: BorderRadius.circular(14),
+                  ),
+                  child: const Icon(
+                    Icons.timer_rounded,
+                    color: Colors.white,
+                    size: 28,
+                  ),
                 ),
-                const SizedBox(width: 24),
-                _buildCircularButton(
-                  icon: Icons.pause_rounded,
-                  color: Colors.red,
-                  onPressed: _stopwatch.isRunning ? _stop : null,
-                  tooltip: 'Stop',
+                const SizedBox(width: 14),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'Stopwatch',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 18,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                    Text(
+                      isRunning ? 'Sedang berjalan...' : 'Siap digunakan',
+                      style: TextStyle(
+                        color: Colors.white.withOpacity(0.75),
+                        fontSize: 13,
+                      ),
+                    ),
+                  ],
                 ),
-                const SizedBox(width: 24),
-                _buildCircularButton(
-                  icon: Icons.refresh_rounded,
-                  color: Colors.blueGrey,
-                  onPressed: _reset,
-                  tooltip: 'Reset',
+                const Spacer(),
+                // Status indicator
+                Container(
+                  width: 10,
+                  height: 10,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: isRunning
+                        ? const Color(0xFF69F0AE)
+                        : Colors.white.withOpacity(0.4),
+                    boxShadow: isRunning
+                        ? [
+                            BoxShadow(
+                              color: const Color(0xFF69F0AE).withOpacity(0.7),
+                              blurRadius: 6,
+                              spreadRadius: 2,
+                            ),
+                          ]
+                        : [],
+                  ),
                 ),
               ],
             ),
-          ],
-        ),
+          ),
+
+          // Main content
+          Expanded(
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  // Clock display
+                  Container(
+                    width: 290,
+                    height: 290,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Colors.white,
+                      boxShadow: [
+                        BoxShadow(
+                          color: const Color(0xFF1565C0).withOpacity(0.15),
+                          blurRadius: 48,
+                          spreadRadius: 12,
+                        ),
+                      ],
+                      border: Border.all(
+                        color: isRunning
+                            ? const Color(0xFF1976D2).withOpacity(0.5)
+                            : const Color(0xFFBBDEFB),
+                        width: 8,
+                      ),
+                    ),
+                    child: Center(
+                      child: Text(
+                        _formatTime(),
+                        style: TextStyle(
+                          fontSize: 38,
+                          fontWeight: FontWeight.w300,
+                          color: isRunning
+                              ? const Color(0xFF0D47A1)
+                              : const Color(0xFF90A4AE),
+                          fontFeatures: const [FontFeature.tabularFigures()],
+                          letterSpacing: 2,
+                        ),
+                      ),
+                    ),
+                  ),
+
+                  const SizedBox(height: 56),
+
+                  // Control buttons
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      // Start button
+                      _buildCircularButton(
+                        icon: Icons.play_arrow_rounded,
+                        activeGradient: const LinearGradient(
+                          colors: [Color(0xFF1565C0), Color(0xFF1E88E5)],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                        ),
+                        onPressed: isRunning ? null : _start,
+                        tooltip: 'Start',
+                        size: 64,
+                      ),
+                      const SizedBox(width: 20),
+                      // Stop button
+                      _buildCircularButton(
+                        icon: Icons.pause_rounded,
+                        activeGradient: const LinearGradient(
+                          colors: [Color(0xFF0277BD), Color(0xFF0288D1)],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                        ),
+                        onPressed: isRunning ? _stop : null,
+                        tooltip: 'Stop',
+                        size: 64,
+                      ),
+                      const SizedBox(width: 20),
+                      // Reset button
+                      _buildCircularButton(
+                        icon: Icons.refresh_rounded,
+                        activeGradient: const LinearGradient(
+                          colors: [Color(0xFF01579B), Color(0xFF0277BD)],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                        ),
+                        onPressed: _reset,
+                        tooltip: 'Reset',
+                        size: 64,
+                      ),
+                    ],
+                  ),
+
+                  const SizedBox(height: 32),
+
+                  // Button labels
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      _buildButtonLabel('Start', isRunning ? false : true),
+                      const SizedBox(width: 52),
+                      _buildButtonLabel('Stop', isRunning),
+                      const SizedBox(width: 52),
+                      _buildButtonLabel('Reset', true),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildButtonLabel(String label, bool active) {
+    return Text(
+      label,
+      style: TextStyle(
+        fontSize: 12,
+        fontWeight: FontWeight.w600,
+        color: active ? const Color(0xFF1565C0) : Colors.grey.shade400,
+        letterSpacing: 0.5,
       ),
     );
   }
 
   Widget _buildCircularButton({
     required IconData icon,
-    required Color color,
+    required LinearGradient activeGradient,
     required VoidCallback? onPressed,
     required String tooltip,
+    required double size,
   }) {
+    final bool isActive = onPressed != null;
+
     return Tooltip(
       message: tooltip,
-      child: Material(
-        color: onPressed == null ? Colors.grey.shade300 : color,
-        shape: const CircleBorder(),
-        elevation: onPressed == null ? 0 : 4,
-        child: InkWell(
-          onTap: onPressed,
-          customBorder: const CircleBorder(),
-          child: Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: Icon(
-              icon,
-              size: 32,
-              color: onPressed == null ? Colors.grey.shade500 : Colors.white,
-            ),
+      child: GestureDetector(
+        onTap: onPressed,
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 200),
+          width: size,
+          height: size,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            gradient: isActive ? activeGradient : null,
+            color: isActive ? null : const Color(0xFFECEFF1),
+            boxShadow: isActive
+                ? [
+                    BoxShadow(
+                      color: const Color(0xFF1565C0).withOpacity(0.35),
+                      blurRadius: 14,
+                      offset: const Offset(0, 5),
+                    ),
+                  ]
+                : [],
+          ),
+          child: Icon(
+            icon,
+            size: 30,
+            color: isActive ? Colors.white : Colors.grey.shade400,
           ),
         ),
       ),
