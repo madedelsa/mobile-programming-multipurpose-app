@@ -44,10 +44,22 @@ class _StopwatchScreenState extends State<StopwatchScreen> {
   }
 
   String _formatTime() {
-    final ms = _stopwatch.elapsedMilliseconds;
+    int setJam = 23;
+    int setMenit = 59;
+    int setDetik = 0;
+
+    int offsetMs = (setJam * 3600000) + (setMenit * 60000) + (setDetik * 1000);
+    final ms = _stopwatch.elapsedMilliseconds + offsetMs;
+
     int hundreds = (ms / 10).truncate() % 100;
     int seconds = (ms / 1000).truncate() % 60;
-    int minutes = (ms / (1000 * 60)).truncate();
+    int minutes = (ms / (1000 * 60)).truncate() % 60;
+    int hours = (ms / (1000 * 60 * 60)).truncate();
+
+    if (hours > 0) {
+      return "${hours.toString().padLeft(2, '0')}:${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}.${hundreds.toString().padLeft(2, '0')}";
+    }
+    
     return "${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}.${hundreds.toString().padLeft(2, '0')}";
   }
 
