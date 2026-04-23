@@ -9,6 +9,7 @@ import 'piramid_screen.dart';
 import 'weton_screen.dart';
 import 'umur_lengkap_screen.dart';
 import 'hijriah_screen.dart';
+import 'saka_screen.dart';
 
 class MainMenuScreen extends StatelessWidget {
   const MainMenuScreen({super.key});
@@ -190,6 +191,14 @@ class MainMenuScreen extends StatelessWidget {
                   const Color(0xFFBBDEFB),
                   const HijriahScreen(),
                 ),
+              _buildMenuCard(
+                context,
+                'Kalender Saka',
+                Icons.calendar_today_rounded,
+                const Color(0xFF0D47A1),
+                const Color(0xFFBBDEFB),
+                const SakaScreen(),
+              ),
               ],
             ),
           ),
