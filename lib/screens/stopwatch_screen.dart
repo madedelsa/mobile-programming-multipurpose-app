@@ -59,20 +59,42 @@ class _StopwatchScreenState extends State<StopwatchScreen> {
     });
   }
 
+  // String _formatTime() {
+  //   int setJam = 23;
+  //   int setMenit = 59;
+  //   int setDetik = 50;
+
+  //   int offsetMs = (setJam * 3600000) + (setMenit * 60000) + (setDetik * 1000);
+  //   final ms = _stopwatch.elapsedMilliseconds + offsetMs;
+
+  //   int hundreds = (ms / 10).truncate() % 100;
+  //   int seconds = (ms / 1000).truncate() % 60;
+  //   int minutes = (ms / (1000 * 60)).truncate() % 60;
+  //   int hours = (ms / (1000 * 60 * 60)).truncate();
+
+  //   if (hours > 0) {
+  //     return "${hours.toString().padLeft(2, '0')}:${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}.${hundreds.toString().padLeft(2, '0')}";
+  //   }
+    
+  //   return "${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}.${hundreds.toString().padLeft(2, '0')}";
+  // }
+
   String _formatTime() {
     final ms = _stopwatch.elapsedMilliseconds + _offsetMs;
 
-    int hundreds = (ms / 10).truncate() % 100;
-    int seconds = (ms / 1000).truncate() % 60;
-    int minutes = (ms / (1000 * 60)).truncate() % 60;
-    int hours = (ms / (1000 * 60 * 60)).truncate();
+  // 2. KUNCI: Gunakan Modulo 24 Jam (86.400.000 ms)
+  // Ini memastikan jika sudah lewat 24 jam, angka kembali ke 0
+  int ms = totalMs % 86400000; 
 
-    if (hours > 0) {
-      return "${hours.toString().padLeft(2, '0')}:${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}.${hundreds.toString().padLeft(2, '0')}";
-    }
-    
-    return "${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}.${hundreds.toString().padLeft(2, '0')}";
-  }
+  // 3. Kalkulasi satuan waktu dari sisa ms
+  int hours = (ms / 3600000).truncate();
+  int minutes = (ms / 60000).truncate() % 60;
+  int seconds = (ms / 1000).truncate() % 60;
+  int hundreds = (ms / 10).truncate() % 100;
+
+  // Mengembalikan format HH:mm:ss.SS
+  return "${hours.toString().padLeft(2, '0')}:${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}.${hundreds.toString().padLeft(2, '0')}";
+}
 
   @override
   void dispose() {
