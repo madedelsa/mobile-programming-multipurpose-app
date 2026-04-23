@@ -16,7 +16,11 @@ class _StopwatchScreenState extends State<StopwatchScreen> {
   void _start() {
     _stopwatch.start();
     _timer = Timer.periodic(const Duration(milliseconds: 30), (Timer t) {
-      setState(() {});
+      if (_stopwatch.elapsedMilliseconds >= 86400000) { // 24 jam = 86400000 ms
+        _reset();
+      } else {
+        setState(() {});
+      }
     });
   }
 
